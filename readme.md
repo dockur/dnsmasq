@@ -19,7 +19,7 @@ Via `docker-compose`
 ```yaml
 version: "3"
 services:
-  samba:
+  dnsmasq:
     image: dockurr/dnsmasq
     container_name: dnsmasq
     ports:
