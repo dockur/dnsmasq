@@ -4,6 +4,7 @@ services:
     image: dockurr/dnsmasq
     container_name: dnsmasq
     ports:
-      - 53/udp:53/udp
-      - 53/tcp:53/tcp
+      - 53:53/udp
+      - 53:53/tcp
+      - 67:67/udp
     restart: on-failure
