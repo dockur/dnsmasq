@@ -1,0 +1,9 @@
+version: "3"
+services:
+  dnsmasq:
+    image: dockurr/dnsmasq
+    container_name: dnsmasq
+    ports:
+      - 53/udp:53/udp
+      - 53/tcp:53/tcp
+    restart: on-failure
