@@ -38,7 +38,7 @@ docker run -it --rm -p 53/udp:53/udp -p 53/tcp:53/tcp dockurr/dnsmasq
 
   * ### How do I modify the configuration?
 
-    You can bind mount your own `dnsmasq.conf` file to the container like this:
+    You can bind mount a custom `dnsmasq.conf` file to the container like this:
 
     ```yaml
     volumes:
