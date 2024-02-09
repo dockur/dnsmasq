@@ -23,15 +23,15 @@ services:
     image: dockurr/dnsmasq
     container_name: dnsmasq
     ports:
-      - 53/udp:53/udp
-      - 53/tcp:53/tcp
+      - 53:53/udp
+      - 53:53/tcp
     restart: on-failure
 ```
 
 Via `docker run`
 
 ```bash
-docker run -it --rm -p 53/udp:53/udp -p 53/tcp:53/tcp dockurr/dnsmasq
+docker run -it --rm -p 53:53/udp -p 53:53/tcp dockurr/dnsmasq
 ```
 
 ## FAQ
