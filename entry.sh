@@ -11,4 +11,4 @@ if [ ! -f "$conf" ]; then
   [ -n "$DNS2" ] && sed -i -e "s/1.1.1.1/$DNS2/g" "$conf"
 fi
 
-exec dnsmasq "--conf-file=$conf" --no-daemon
+exec dnsmasq "--conf-file=$conf" --no-daemon --no-resolv
