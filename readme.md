@@ -22,6 +22,9 @@ services:
   dnsmasq:
     image: dockurr/dnsmasq
     container_name: dnsmasq
+    environment:
+      - DNS1: "1.0.0.1"
+      - DNS2: "1.1.1.1"
     ports:
       - 53:53/udp
       - 53:53/tcp
@@ -33,14 +36,16 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -p 53:53/udp -p 53:53/tcp --cap-add=NET_ADMIN dockurr/dnsmasq
+docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
 ```
 
 ## FAQ
 
   * ### How do I modify the configuration?
 
-    You can bind mount a custom `dnsmasq.conf` file to the container like this:
+    You can set the `DNS1` and `DNS2` environment variables to configure the upstream DNS servers to use.
+
+    If you need more advanced features, you can bind mount a custom `dnsmasq.conf` file to the container like this:
 
     ```yaml
     volumes:
