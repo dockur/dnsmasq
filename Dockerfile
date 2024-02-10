@@ -14,6 +14,9 @@ COPY dnsmasq.conf /etc/dnsmasq.conf
 COPY entry.sh /usr/bin/
 RUN chmod +x /usr/bin/dnsmasq.sh
 
+ENV DNS1 "1.0.0.1"
+ENV DNS2 "1.1.1.1"
+
 EXPOSE 53/tcp 53/udp 67/udp
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/dnsmasq.sh"]
