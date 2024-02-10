@@ -25,13 +25,15 @@ services:
     ports:
       - 53:53/udp
       - 53:53/tcp
+    cap_add:
+      - NET_ADMIN
     restart: on-failure
 ```
 
 Via `docker run`
 
 ```bash
-docker run -it --rm -p 53:53/udp -p 53:53/tcp dockurr/dnsmasq
+docker run -it --rm -p 53:53/udp -p 53:53/tcp --cap-add=NET_ADMIN dockurr/dnsmasq
 ```
 
 ## FAQ
