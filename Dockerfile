@@ -10,6 +10,7 @@ RUN mkdir -p /etc/default/
 RUN echo -e "ENABLED=1\nIGNORE_RESOLVCONF=yes" > /etc/default/dnsmasq
 
 COPY dnsmasq.conf /etc/dnsmasq.default
+RUN rm -f /etc/dnsmasq.conf
 
 COPY entry.sh /usr/bin/dnsmasq.sh
 RUN chmod +x /usr/bin/dnsmasq.sh
