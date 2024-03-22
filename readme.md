@@ -98,6 +98,23 @@ completely with a volume that bind mounts a custom `dnsmasq.conf` file:
   uninstalled or disabled or a number of other causes but finding out which process is
   binding the port is a good place to start debugging.
 
+  * ### DNS queries from the host's LAN are ignored, how do I workaround that?
+
+  The default configuration turns on the `local-service` option which ignores, blocks,
+  or rejects queries from outside the local subnet. When running in a container on an
+  isolated internal network, this means queries from the hosts' LAN are ignored:
+
+  ```
+  dnsmasq: ignoring query from non-local network 192.168.1.### (logged only once)
+  ```
+
+  Workaround this by specifying which network interface inside the container that
+  dnsmasq should listen on:
+
+  ```
+  interface=eth0
+  ```
+
 ## Stars
 [![Stars](https://starchart.cc/dockur/dnsmasq.svg?variant=adaptive)](https://starchart.cc/dockur/dnsmasq)
 
