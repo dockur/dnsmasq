@@ -23,8 +23,8 @@ services:
     image: dockurr/dnsmasq
     container_name: dnsmasq
     environment:
-      - DNS1: "1.0.0.1"
-      - DNS2: "1.1.1.1"
+      DNS1: "1.0.0.1"
+      DNS2: "1.1.1.1"
     ports:
       - 53:53/udp
       - 53:53/tcp
