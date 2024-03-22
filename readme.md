@@ -39,13 +39,25 @@ Via `docker run`
 docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
 ```
 
-## FAQ
+You can set the `DNS1` and `DNS2` environment variables to change whit upstream DNS
+servers to use. The examples above are the upstream DNS servers built into the default
+configuration. You can read the default configuration built into the image:
 
-  * ### How do I modify the configuration?
+```bash
+docker run --rm --entrypoint "cat" "dockurr/dnsmasq" "/etc/dnsmasq.default"
+...
+```
 
-    You can set the `DNS1` and `DNS2` environment variables to configure the upstream DNS servers to use.
+You can add to or extend the default configuration with a volume that bind mounts a
+directory containing `*.conf` configuration files:
 
-    If you need more advanced features, you can bind mount a custom `dnsmasq.conf` file to the container like this:
+    ```yaml
+    volumes:
+      - /example/dnsmasq.d/:/etc/dnsmasq.d/
+    ```
+
+If you need more advanced features, you can override the default configuration
+completely with a volume that bind mounts a custom `dnsmasq.conf` file:
 
     ```yaml
     volumes:
