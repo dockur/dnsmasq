@@ -64,6 +64,40 @@ completely with a volume that bind mounts a custom `dnsmasq.conf` file:
       - /example/dnsmasq.conf:/etc/dnsmasq.conf
     ```
 
+## FAQ
+
+  * ### Something is already binding to port `53`, how do I workaround that?
+
+  If some process on the host is already binding port `53` you may see an error similar
+  to the following:
+
+  ```
+  Error response from daemon: driver failed programming external connectivity on
+  endpoint dnsmasq (...): Error starting userland proxy: listen tcp4 0.0.0.0:53: bind:
+  address already in use
+  ```
+
+  You can inspect which process is binding to that port:
+
+  ```bash
+  $ netstat -lnpt | grep -E ':53 +'
+  tcp    0    0 127.0.0.53:53    0.0.0.0:*    LISTEN    197/systemd-resolve
+  ```
+
+  On hosts running `# systemd`, such as in this example, you can workaround this by
+  specifying the IP addresses on which to bind port `53`, for example:
+
+  ```yaml
+  ports:
+    - "192.168.1.###:53:53/udp"
+    - "192.168.1.###:53:53/tcp"
+  ```
+
+  There are many other host-specific cases where some process and configuration binds
+  port `53`. It may be an unused DNS daemon, such as `# bind`, that needs to be
+  uninstalled or disabled or a number of other causes but finding out which process is
+  binding the port is a good place to start debugging.
+
 ## Stars
 [![Stars](https://starchart.cc/dockur/dnsmasq.svg?variant=adaptive)](https://starchart.cc/dockur/dnsmasq)
 
