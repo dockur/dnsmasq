@@ -47,17 +47,17 @@ servers to use. In the examples above they are set to the public [Cloudflare](ht
 You can add to or extend the [default configuration](https://github.com/dockur/dnsmasq/blob/master/dnsmasq.conf) with a volume that bind mounts a
 directory containing `*.conf` configuration files:
 
-    ```yaml
+```yaml
     volumes:
       - /example/dnsmasq.d/:/etc/dnsmasq.d/
-    ```
+```
 
 You can also override the [default configuration](https://github.com/dockur/dnsmasq/blob/master/dnsmasq.conf) completely with a volume that bind mounts a custom `dnsmasq.conf` file:
 
-    ```yaml
+```yaml
     volumes:
       - /example/dnsmasq.conf:/etc/dnsmasq.conf
-    ```
+```
 
 ## FAQ
 
