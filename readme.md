@@ -39,16 +39,12 @@ Via `docker run`
 docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
 ```
 
-You can set the `DNS1` and `DNS2` environment variables to change whit upstream DNS
-servers to use. The examples above are the upstream DNS servers built into the default
-configuration. You can read the default configuration built into the image:
+## Configuration
 
-```bash
-docker run --rm --entrypoint "cat" "dockurr/dnsmasq" "/etc/dnsmasq.default"
-...
-```
+You can set the `DNS1` and `DNS2` environment variables to change which upstream DNS
+servers to use. In the examples above they are set to the public [Cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) servers. 
 
-You can add to or extend the default configuration with a volume that bind mounts a
+You can add to or extend the [default configuration](https://github.com/dockur/dnsmasq/blob/master/dnsmasq.conf) with a volume that bind mounts a
 directory containing `*.conf` configuration files:
 
     ```yaml
@@ -56,8 +52,7 @@ directory containing `*.conf` configuration files:
       - /example/dnsmasq.d/:/etc/dnsmasq.d/
     ```
 
-If you need more advanced features, you can override the default configuration
-completely with a volume that bind mounts a custom `dnsmasq.conf` file:
+You can also override the [default configuration](https://github.com/dockur/dnsmasq/blob/master/dnsmasq.conf) completely with a volume that bind mounts a custom `dnsmasq.conf` file:
 
     ```yaml
     volumes:
@@ -97,23 +92,6 @@ completely with a volume that bind mounts a custom `dnsmasq.conf` file:
   port `53`. It may be an unused DNS daemon, such as `# bind`, that needs to be
   uninstalled or disabled or a number of other causes but finding out which process is
   binding the port is a good place to start debugging.
-
-  * ### DNS queries from the host's LAN are ignored, how do I workaround that?
-
-  The default configuration turns on the `local-service` option which ignores, blocks,
-  or rejects queries from outside the local subnet. When running in a container on an
-  isolated internal network, this means queries from the hosts' LAN are ignored:
-
-  ```
-  dnsmasq: ignoring query from non-local network 192.168.1.### (logged only once)
-  ```
-
-  Workaround this by specifying which network interface inside the container that
-  dnsmasq should listen on:
-
-  ```
-  interface=eth0
-  ```
 
 ## Stars
 [![Stars](https://starchart.cc/dockur/dnsmasq.svg?variant=adaptive)](https://starchart.cc/dockur/dnsmasq)
