@@ -3,7 +3,7 @@ FROM alpine:edge
 RUN apk --no-cache add \
   tini \
   bash \
-  dnsmasq && \
+  dnsmasq-dnssec && \
   rm -rf /tmp/* /var/cache/apk/*
  
 RUN mkdir -p /etc/default/
