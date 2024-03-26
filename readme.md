@@ -10,7 +10,7 @@
 
 </div></h1>
 
-Docker container of dnsmasq, an open-source DNS and DHCP server.
+Docker container of dnsmasq, an open-source DNS server.
 
 ## How to use
 
