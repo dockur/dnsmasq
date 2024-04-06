@@ -14,7 +14,7 @@ Docker container of dnsmasq, an open-source DNS server.
 
 ## How to use
 
-Via `docker-compose`
+Via Docker Compose:
 
 ```yaml
 version: "3"
@@ -33,7 +33,7 @@ services:
     restart: on-failure
 ```
 
-Via `docker run`
+Via Docker CLI:
 
 ```bash
 docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
