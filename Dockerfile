@@ -11,7 +11,7 @@ RUN set -eu && \
     rm -rf /tmp/* /var/cache/apk/*
   
 COPY --chmod=755 entry.sh /usr/bin/dnsmasq.sh
-COPY --chmod=644 dnsmasq.conf /etc/dnsmasq.default
+COPY --chmod=664 dnsmasq.conf /etc/dnsmasq.default
 
 ENV DNS1 "1.0.0.1"
 ENV DNS2 "1.1.1.1"
