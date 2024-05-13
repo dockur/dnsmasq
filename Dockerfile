@@ -1,16 +1,15 @@
 FROM alpine:edge
 
-RUN apk --no-cache add \
-  tini \
-  bash \
-  dnsmasq-dnssec && \
-  rm -rf /tmp/* /var/cache/apk/*
-
 RUN set -eu && \
-    mkdir -p /etc/default/  && \
+    apk --no-cache add \
+    tini \
+    bash \
+    dnsmasq-dnssec && \
+    mkdir -p /etc/default/ && \
     echo -e "ENABLED=1\nIGNORE_RESOLVCONF=yes" > /etc/default/dnsmasq && \
-    rm -f /etc/dnsmasq.conf
-
+    rm -f /etc/dnsmasq.conf && \
+    rm -rf /tmp/* /var/cache/apk/*
+  
 COPY --chmod=755 entry.sh /usr/bin/dnsmasq.sh
 COPY --chmod=644 dnsmasq.conf /etc/dnsmasq.default
 
