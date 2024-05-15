@@ -17,7 +17,6 @@ Docker container of dnsmasq, an open-source DNS server.
 Via Docker Compose:
 
 ```yaml
-version: "3"
 services:
   dnsmasq:
     image: dockurr/dnsmasq
