@@ -6,6 +6,7 @@
 [![Build]][build_url]
 [![Version]][tag_url]
 [![Size]][tag_url]
+[![Package]][pkg_url]
 [![Pulls]][hub_url]
 
 </div></h1>
@@ -97,8 +98,10 @@ You can also override [dnsmasq.conf](https://github.com/dockur/dnsmasq/blob/mast
 [build_url]: https://github.com/dockur/dnsmasq/
 [hub_url]: https://hub.docker.com/r/dockurr/dnsmasq
 [tag_url]: https://hub.docker.com/r/dockurr/dnsmasq/tags
+[pkg_url]: https://github.com/dockur/dnsmasq/pkgs/container/dnsmasq
 
 [Build]: https://github.com/dockur/dnsmasq/actions/workflows/build.yml/badge.svg
 [Size]: https://img.shields.io/docker/image-size/dockurr/dnsmasq/latest?color=066da5&label=size
 [Pulls]: https://img.shields.io/docker/pulls/dockurr/dnsmasq.svg?style=flat&label=pulls&logo=docker
 [Version]: https://img.shields.io/docker/v/dockurr/dnsmasq/latest?arch=amd64&sort=semver&color=066da5
+[Package]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fipitio%2Fghcr-pulls%2Fmaster%2Findex.json&query=%24%5B%3F(%40.owner%3D%3D%22dockur%22%20%26%26%20%40.repo%3D%3D%22dnsmasq%22%20%26%26%20%40.image%3D%3D%22dnsmasq%22)%5D.pulls&logo=github&style=flat&color=066da5&label=pulls
