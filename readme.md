@@ -12,7 +12,7 @@
 
 Docker container of [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html), an open-source DNS server.
 
-## How to use
+## Usage  🐳
 
 Via Docker Compose:
 
@@ -37,7 +37,7 @@ Via Docker CLI:
 docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
 ```
 
-## Configuration
+## Configuration ⚙️
 
 You can set the `DNS1` and `DNS2` environment variables to change which upstream DNS
 servers to use. In the examples above they are set to the public [Cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) servers. 
@@ -57,7 +57,7 @@ You can also override [dnsmasq.conf](https://github.com/dockur/dnsmasq/blob/mast
       - /example/dnsmasq.conf:/etc/dnsmasq.conf
 ```
 
-## FAQ
+## FAQ 💬
 
   * ### Port 53 is already in use?
 
@@ -91,7 +91,7 @@ You can also override [dnsmasq.conf](https://github.com/dockur/dnsmasq/blob/mast
   uninstalled or disabled, or a number of other causes. So finding out which process is
   binding the port is a good place to start debugging.
 
-## Stars
+## Stars 🌟
 [![Stars](https://starchart.cc/dockur/dnsmasq.svg?variant=adaptive)](https://starchart.cc/dockur/dnsmasq)
 
 [build_url]: https://github.com/dockur/dnsmasq/
