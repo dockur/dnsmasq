@@ -6,6 +6,7 @@
 .vscode
 Dockerfile
 Dockerfile.archive
+compose.yml
 docker-compose.yml
 renovate.json
 
