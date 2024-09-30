@@ -13,8 +13,8 @@ RUN set -eu && \
 COPY --chmod=755 entry.sh /usr/bin/dnsmasq.sh
 COPY --chmod=664 dnsmasq.conf /etc/dnsmasq.default
 
-ENV DNS1 "1.0.0.1"
-ENV DNS2 "1.1.1.1"
+ENV DNS1="1.0.0.1"
+ENV DNS2="1.1.1.1"
 
 EXPOSE 53/tcp 53/udp 67/udp
 
