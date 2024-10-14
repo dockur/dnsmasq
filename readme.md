@@ -41,21 +41,29 @@ docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1
 ## Configuration ⚙️
 
 You can set the `DNS1` and `DNS2` environment variables to change which upstream DNS
-servers to use. In the examples above they are set to the public [Cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) servers. 
+servers to use.
+
+For example, you can set them to the public [Cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) servers like this:
+
+```yaml
+environment:
+  DNS1: "1.0.0.1"
+  DNS2: "1.1.1.1"
+```
 
 You can extend the default configuration with a volume that mounts a
 directory containing `*.conf` configuration files:
 
 ```yaml
-    volumes:
-      - /example/dnsmasq.d/:/etc/dnsmasq.d/
+volumes:
+  - /example/dnsmasq.d/:/etc/dnsmasq.d/
 ```
 
 You can also override [dnsmasq.conf](https://github.com/dockur/dnsmasq/blob/master/dnsmasq.conf) completely with a volume that binds your custom configuration file:
 
 ```yaml
-    volumes:
-      - /example/dnsmasq.conf:/etc/dnsmasq.conf
+volumes:
+  - /example/dnsmasq.conf:/etc/dnsmasq.conf
 ```
 
 ## FAQ 💬
