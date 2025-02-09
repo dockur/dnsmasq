@@ -30,6 +30,7 @@ services:
       - 53:53/tcp
     cap_add:
       - NET_ADMIN
+    restart: always
 ```
 
 Via Docker CLI:
