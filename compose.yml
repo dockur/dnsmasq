@@ -8,4 +8,6 @@ services:
     ports:
       - 53:53/udp
       - 53:53/tcp
-      - 67:67/udp
+    cap_add:
+      - NET_ADMIN
+    restart: always
