@@ -23,8 +23,8 @@ services:
     image: dockurr/dnsmasq
     container_name: dnsmasq
     environment:
-      DNS1: "1.0.0.1"
-      DNS2: "1.1.1.1"
+      - DNS1: "1.0.0.1"
+      - DNS2: "1.1.1.1"
     ports:
       - 53:53/udp
       - 53:53/tcp
@@ -48,8 +48,8 @@ For example, you can set them to the public [Cloudflare](https://www.cloudflare.
 
 ```yaml
 environment:
-  DNS1: "1.0.0.1"
-  DNS2: "1.1.1.1"
+  - DNS1: "1.0.0.1"
+  - DNS2: "1.1.1.1"
 ```
 
 You can extend the default configuration with a volume that mounts a
