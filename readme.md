@@ -36,7 +36,7 @@ services:
 Via Docker CLI:
 
 ```bash
-docker run -it --rm -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
+docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN dockurr/dnsmasq
 ```
 
 ## Configuration ⚙️
@@ -57,14 +57,14 @@ directory containing `*.conf` configuration files:
 
 ```yaml
 volumes:
-  - /example/dnsmasq.d/:/etc/dnsmasq.d/
+  - ./dnsmasq.d/:/etc/dnsmasq.d/
 ```
 
 You can also override [dnsmasq.conf](https://github.com/dockur/dnsmasq/blob/master/dnsmasq.conf) completely with a volume that binds your custom configuration file:
 
 ```yaml
 volumes:
-  - /example/dnsmasq.conf:/etc/dnsmasq.conf
+  - ./dnsmasq.conf:/etc/dnsmasq.conf
 ```
 
 ## FAQ 💬
