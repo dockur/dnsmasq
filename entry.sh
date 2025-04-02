@@ -6,7 +6,7 @@ conf="/etc/dnsmasq.conf"
 # Check if config file is not a directory
 if [ -d "$conf" ]; then
 
-    echo "The file $conf does not exist, please check that you mapped it to a valid path!"
+    echo "The bind $conf maps to a file that does not exist!"
     exit 1
 
 fi
