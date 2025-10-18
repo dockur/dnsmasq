@@ -17,6 +17,11 @@ COPY --chmod=664 dnsmasq.conf /etc/dnsmasq.default
 
 ENV DNS1="1.0.0.1"
 ENV DNS2="1.1.1.1"
+ENV DNS3=""
+ENV DNS4=""
+ENV CACHE_SIZE="150"
+ENV DOMAIN_NEEDED="false"
+ENV LOG_QUERIES="false"
 
 EXPOSE 53/tcp 53/udp 67/udp
 
