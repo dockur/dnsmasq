@@ -21,8 +21,13 @@ if [ ! -f "$conf" ]; then
   rm -f "$conf"
   cp "$template"  "$conf"
   
-  [ -n "$DNS1" ] && sed -i -e "s/1.0.0.1/$DNS1/g" "$conf"
-  [ -n "$DNS2" ] && sed -i -e "s/1.1.1.1/$DNS2/g" "$conf"
+  if [ -n "$DNS1" ]; then
+    echo "server=$DNS1" >> "$conf"
+  fi
+  
+  if [ -n "$DNS2" ]; then
+    echo "server=$DNS2" >> "$conf"
+  fi
   
   if [ -n "$DNS3" ]; then
     echo "server=$DNS3" >> "$conf"
