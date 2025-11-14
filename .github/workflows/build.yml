@@ -31,8 +31,14 @@ jobs:
             sed -E 's/\o36{2,}/\n/g' |
             sed -nE '/(^|\o36)P:dnsmasq($|\o36)/ s/(^|.+\o36)V:([^\o36]+)($|\o36.+)/\2/ p')
           echo "Found tag: \"${latest_tag}\"" 
+          latest_version="${latest_tag%-*}"
+          major="${latest_version%%.*}"
+          minor="${latest_version#*.}"
+          minor="${minor%%.*}"
           echo "latest_tag=$latest_tag" >> $GITHUB_ENV
-          echo "latest_version=${latest_tag%-*}" >> $GITHUB_ENV
+          echo "latest_version=$latest_version" >> $GITHUB_ENV
+          echo "latest_minor=$major.$minor" >> $GITHUB_ENV
+          echo "latest_major=$major" >> $GITHUB_ENV
       - 
         name: Check if the tag exists locally
         uses: action-pack/tag-exists@v1
@@ -63,7 +69,9 @@ jobs:
             ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=latest,priority=100
-            type=raw,value=${{ env.latest_version }}
+            type=raw,value=${{ env.latest_major }},priority=350
+            type=raw,value=${{ env.latest_minor }},priority=350
+            type=raw,value=${{ env.latest_version }},priority=250
           labels: |
             org.opencontainers.image.title=${{ vars.NAME }}
         env:
