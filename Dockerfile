@@ -3,6 +3,8 @@
 FROM alpine:edge
 
 RUN set -eu && \
+    apk update && \
+    apk upgrade && \
     apk --no-cache add \
     tini \
     bash \
