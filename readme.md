@@ -29,6 +29,7 @@ services:
       - 53:53/udp
       - 53:53/tcp
     cap_add:
+      - NET_RAW
       - NET_ADMIN
     restart: always
 ```
