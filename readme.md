@@ -103,7 +103,7 @@ volumes:
   binding the port is a good place to start debugging.
 
 ## Stars 🌟
-[![Stars](https://starchart.cc/dockur/dnsmasq.svg?variant=adaptive)](https://starchart.cc/dockur/dnsmasq)
+[![Stargazers](https://raw.githubusercontent.com/star-stats/stars/refs/heads/data/charts/dockur-dnsmasq.svg)](https://github.com/dockur/dnsmasq/stargazers)
 
 [build_url]: https://github.com/dockur/dnsmasq/
 [hub_url]: https://hub.docker.com/r/dockurr/dnsmasq
