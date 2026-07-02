@@ -15,7 +15,7 @@ Docker container of [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html), an op
 
 ## Usage  🐳
 
-##### Via Docker Compose:
+##### Docker Compose:
 
 ```yaml
 services:
@@ -34,7 +34,7 @@ services:
     restart: always
 ```
 
-##### Via Docker CLI:
+##### Docker CLI:
 
 ```bash
 docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN docker.io/dockurr/dnsmasq
