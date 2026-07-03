@@ -3,10 +3,17 @@ set -Eeuo pipefail
 
 conf="/etc/dnsmasq.conf"
 
+is_enabled() {
+  case "${1:-}" in
+    Y|y|YES|Yes|yes|TRUE|True|true|1|ON|On|on) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 # Check if config file is not a directory
 if [ -d "$conf" ]; then
-    echo "The bind $conf maps to a file that does not exist!"
-    exit 1
+  echo "The bind $conf maps to a file that does not exist!"
+  exit 1
 fi
 
 if [ ! -f "$conf" ]; then
@@ -30,12 +37,12 @@ if [ ! -f "$conf" ]; then
   if [ -n "${CACHE_SIZE:-}" ]; then
     sed -i -e "s/^cache-size=.*/cache-size=$CACHE_SIZE/g" "$conf"
   fi
-  
-  if [ -n "${DOMAIN_NEEDED:-}" ]; then
+
+  if is_enabled "${DOMAIN_NEEDED:-}"; then
     sed -i -e "s/^#domain-needed/domain-needed/g" "$conf"
   fi
-  
-  if [ -n "${LOG_QUERIES:-}" ]; then
+
+  if is_enabled "${LOG_QUERIES:-}"; then
     sed -i -e "s/^#log-queries/log-queries/g" "$conf"
   fi
 
