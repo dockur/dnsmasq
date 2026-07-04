@@ -2,18 +2,26 @@
 
 FROM alpine:edge
 
-RUN set -eu && \
-    apk update && \
-    apk upgrade && \
-    apk --no-cache add \
+RUN <<EOF
+  set -eu
+
+  apk update
+  apk upgrade
+  apk --no-cache add \
     tini \
     bash \
-    dnsmasq-dnssec && \
-    mkdir -p /etc/default/ && \
-    echo -e "ENABLED=1\nIGNORE_RESOLVCONF=yes" > /etc/default/dnsmasq && \
-    rm -f /etc/dnsmasq.conf && \
-    rm -rf /tmp/* /var/cache/apk/*
-  
+    dnsmasq-dnssec
+
+  # Configure dnsmasq defaults
+  mkdir -p /etc/default/
+  printf 'ENABLED=1\nIGNORE_RESOLVCONF=yes\n' > /etc/default/dnsmasq
+
+  # Remove default dnsmasq config
+  rm -f /etc/dnsmasq.conf
+
+  rm -rf /tmp/* /var/cache/apk/*
+EOF
+
 COPY --chmod=755 entry.sh /usr/bin/dnsmasq.sh
 COPY --chmod=664 dnsmasq.conf /etc/dnsmasq.default
 
