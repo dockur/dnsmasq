@@ -13,6 +13,16 @@
 
 Docker container of [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html), an open-source DNS server.
 
+## Features ✨
+
+- Provides a lightweight DNS/DHCP server
+- Forwards DNS queries to upstream resolvers
+- Supports local hostname and domain resolution
+- Supports DHCP leases and static reservations
+- Supports custom DNS records and hosts files
+- Allows custom `dnsmasq.conf` configuration
+- Lightweight Alpine-based image
+
 ## Usage  🐳
 
 ##### Docker Compose:
