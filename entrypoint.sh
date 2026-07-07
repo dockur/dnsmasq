@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 conf="/etc/dnsmasq.conf"
 
-is_enabled() {
+enabled() {
   case "${1:-}" in
     Y|y|YES|Yes|yes|TRUE|True|true|1|ON|On|on) return 0 ;;
     *) return 1 ;;
@@ -38,11 +38,11 @@ if [ ! -f "$conf" ]; then
     sed -i -e "s/^cache-size=.*/cache-size=$CACHE_SIZE/g" "$conf"
   fi
 
-  if is_enabled "${DOMAIN_NEEDED:-}"; then
+  if enabled "${DOMAIN_NEEDED:-}"; then
     sed -i -e "s/^#domain-needed/domain-needed/g" "$conf"
   fi
 
-  if is_enabled "${LOG_QUERIES:-}"; then
+  if enabled "${LOG_QUERIES:-}"; then
     sed -i -e "s/^#log-queries/log-queries/g" "$conf"
   fi
 
