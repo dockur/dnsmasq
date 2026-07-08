@@ -1,3 +1,4 @@
+<h1 align="center">dnsmasq<br />
 <div align="center">
 <a href="https://github.com/dockur/dnsmasq"><img src="https://raw.githubusercontent.com/dockur/dnsmasq/master/.github/logo.png" title="Logo" style="max-width:100%;" width="256" /></a>
 </div>
