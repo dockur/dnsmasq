@@ -10,6 +10,17 @@ enabled() {
   esac
 }
 
+has_global_server() {
+  local file
+
+  for file in /etc/dnsmasq.d/*.conf; do
+    [ -f "$file" ] || continue
+    grep -Eq '^[[:space:]]*server=[[:space:]]*[^/[:space:]]' "$file" && return 0
+  done
+
+  return 1
+}
+
 # Check if config file is not a directory
 if [ -d "$conf" ]; then
   echo "The bind $conf maps to a file that does not exist!"
@@ -29,10 +40,12 @@ if [ ! -f "$conf" ]; then
   rm -f "$conf"
   cp "$template"  "$conf"
 
-  [ -n "${DNS1:-}" ] && echo "server=$DNS1" >> "$conf"
-  [ -n "${DNS2:-}" ] && echo "server=$DNS2" >> "$conf"
-  [ -n "${DNS3:-}" ] && echo "server=$DNS3" >> "$conf"
-  [ -n "${DNS4:-}" ] && echo "server=$DNS4" >> "$conf"
+  if ! has_global_server; then
+    [ -n "${DNS1:-}" ] && echo "server=$DNS1" >> "$conf"
+    [ -n "${DNS2:-}" ] && echo "server=$DNS2" >> "$conf"
+    [ -n "${DNS3:-}" ] && echo "server=$DNS3" >> "$conf"
+    [ -n "${DNS4:-}" ] && echo "server=$DNS4" >> "$conf"
+  fi
   
   if [ -n "${CACHE_SIZE:-}" ]; then
     echo "cache-size=$CACHE_SIZE" >> "$conf"
