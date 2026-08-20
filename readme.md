@@ -39,16 +39,13 @@ services:
     ports:
       - 53:53/udp
       - 53:53/tcp
-    cap_add:
-      - NET_RAW
-      - NET_ADMIN
     restart: always
 ```
 
 ##### Docker CLI:
 
 ```bash
-docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN docker.io/dockurr/dnsmasq
+docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" docker.io/dockurr/dnsmasq
 ```
 
 ## Configuration ⚙️
@@ -80,37 +77,117 @@ volumes:
 
 ## FAQ 💬
 
+  * ### How to setup the DHCP server?
+
+  To use dnsmasq as a DHCP server, the container needs additional network capabilities:
+
+  ```yaml
+  cap_add:
+    - NET_RAW
+    - NET_ADMIN
+  ```
+
+  `NET_RAW` allows dnsmasq to check whether an address is already in use before assigning it to a client. `NET_ADMIN` is required for network operations used by DHCP, such as managing ARP entries.
+
+  The container must also be reachable by DHCP clients on UDP port `67`. Because DHCP discovery uses broadcast traffic, normal container bridge networking may not be suitable.
+
+  On Linux, the simplest option is usually host networking:
+
+  ```yaml
+  services:
+    dnsmasq:
+      image: dockurr/dnsmasq
+      network_mode: host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+      volumes:
+        - ./dnsmasq.d/:/etc/dnsmasq.d/
+      restart: always
+  ```
+
+  DHCP is enabled by adding a `dhcp-range` to the dnsmasq configuration. For example, create `./dnsmasq.d/dhcp.conf` with:
+
+  ```ini
+  dhcp-range=192.168.1.100,192.168.1.200,255.255.255.0,12h
+  ```
+
+  This assigns addresses from `192.168.1.100` through `192.168.1.200` with a lease time of 12 hours.
+
+  You can optionally specify the gateway and DNS server advertised to clients:
+
+  ```ini
+  dhcp-range=192.168.1.100,192.168.1.200,255.255.255.0,12h
+  dhcp-option=option:router,192.168.1.1
+  dhcp-option=option:dns-server,192.168.1.10
+  ```
+
+  Replace `192.168.1.1` with your network gateway and `192.168.1.10` with the address of the host running dnsmasq.
+
+  If dnsmasq is the only DHCP server on the network, you can also enable authoritative mode:
+
+  ```ini
+  dhcp-authoritative
+  ```
+
+  Be careful not to run an additional DHCP server on the same network unless they are deliberately configured to coexist.
+
+  Alternatively, you can use a network driver such as `macvlan` or `ipvlan` when the container should have its own address on the local network.
+
+  * ### How do `DNS1` and `DNS2` interact with custom configuration?
+
+  `DNS1` and `DNS2` configure the default upstream DNS servers when the image uses its generated configuration.
+
+  If you provide your own `/etc/dnsmasq.conf`, these environment variables are ignored:
+
+  ```yaml
+  volumes:
+    - ./dnsmasq.conf:/etc/dnsmasq.conf
+  ```
+
+  If you extend the default configuration through `/etc/dnsmasq.d/` and define your own global upstream server:
+
+  ```ini
+  server=192.168.1.1
+  ```
+
+  the default upstream servers are not added.
+
+  Domain-specific servers do not replace the default upstreams. For example:
+
+  ```ini
+  server=/example.local/192.168.1.1
+  ```
+
+  only changes resolution for `example.local`.
+
   * ### Port 53 is already in use?
 
-  If some process on the host is already binding to port `53`, you may see an error similar
-  to the following:
+  If another process on the host is already listening on port `53`, the container may fail to start with an error similar to:
 
-  ```
+  ```text
   Error response from daemon: driver failed programming external connectivity on
-  endpoint dnsmasq (...): Error starting userland proxy: listen tcp4 0.0.0.0:53: bind:
-  address already in use
+  endpoint dnsmasq (...): Error starting userland proxy: listen tcp4 0.0.0.0:53:
+  bind: address already in use
   ```
 
-  You can inspect which process is binding to that port:
+  On Linux, you can check which process is using port `53` with:
 
   ```bash
-  $ netstat -lnpt | grep -E ':53 +'
-  tcp    0    0 127.0.0.53:53    0.0.0.0:*    LISTEN    197/systemd-resolve
+  sudo ss -lntup | grep ':53'
   ```
 
-  On hosts running `systemd`, such as in this example, you can workaround this by
-  specifying the IP addresses on which to bind port `53`, for example:
+  A common example is `systemd-resolved`, but other DNS services such as `bind`, `unbound`, or another dnsmasq instance may also be using the port.
+
+  If the service only occupies port `53` on one host address, you can bind the container to a different address:
 
   ```yaml
   ports:
-    - "192.168.1.###:53:53/udp"
-    - "192.168.1.###:53:53/tcp"
+    - "192.168.1.10:53:53/udp"
+    - "192.168.1.10:53:53/tcp"
   ```
 
-  There are many other host-specific cases where some process and configuration binds
-  port `53`. It may be an unused DNS daemon, such as `bind` that needs to be
-  uninstalled or disabled, or a number of other causes. So finding out which process is
-  binding the port is a good place to start debugging.
+  Otherwise, stop or reconfigure the conflicting service before starting the container.
 
 ## Stars 🌟
 [![Stargazers](https://raw.githubusercontent.com/star-stats/stars/refs/heads/data/charts/dockur-dnsmasq.svg)](https://github.com/dockur/dnsmasq/stargazers)
