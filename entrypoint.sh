@@ -52,11 +52,11 @@ if [ ! -f "$conf" ]; then
   fi
 
   if enabled "${DOMAIN_NEEDED:-}"; then
-    sed -i -e "s/^#domain-needed/domain-needed/g" "$conf"
+    echo "domain-needed" >> "$conf"
   fi
 
   if enabled "${LOG_QUERIES:-}"; then
-    sed -i -e "s/^#log-queries/log-queries/g" "$conf"
+    echo "log-queries" >> "$conf"
   fi
 
 fi
