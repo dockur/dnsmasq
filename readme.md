@@ -39,16 +39,13 @@ services:
     ports:
       - 53:53/udp
       - 53:53/tcp
-    cap_add:
-      - NET_RAW
-      - NET_ADMIN
     restart: always
 ```
 
 ##### Docker CLI:
 
 ```bash
-docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" --cap-add=NET_ADMIN docker.io/dockurr/dnsmasq
+docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -e "DNS2=1.1.1.1" docker.io/dockurr/dnsmasq
 ```
 
 ## Configuration ⚙️
@@ -80,6 +77,18 @@ volumes:
 
 ## FAQ 💬
 
+  * ### How to setup the DHCP server?
+
+  To use the container as a DHCP server, add the following to your compose file:
+
+  ```
+  cap_add:
+    - NET_RAW
+    - NET_ADMIN
+  ```
+
+  These extra permissions are needed because ...
+  
   * ### Port 53 is already in use?
 
   If some process on the host is already binding to port `53`, you may see an error similar
