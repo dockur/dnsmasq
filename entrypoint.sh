@@ -35,7 +35,7 @@ if [ ! -f "$conf" ]; then
   [ -n "${DNS4:-}" ] && echo "server=$DNS4" >> "$conf"
   
   if [ -n "${CACHE_SIZE:-}" ]; then
-    sed -i -e "s/^cache-size=.*/cache-size=$CACHE_SIZE/g" "$conf"
+    echo "cache-size=$CACHE_SIZE" >> "$conf"
   fi
 
   if enabled "${DOMAIN_NEEDED:-}"; then
@@ -48,4 +48,4 @@ if [ ! -f "$conf" ]; then
 
 fi
 
-exec dnsmasq "--conf-file=$conf" --no-daemon --no-resolv
+exec dnsmasq "--conf-file=$conf" --keep-in-foreground --log-facility=- --no-resolv
