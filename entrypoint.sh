@@ -10,6 +10,17 @@ enabled() {
   esac
 }
 
+has_global_server() {
+  local file
+
+  for file in /etc/dnsmasq.d/*.conf; do
+    [ -f "$file" ] || continue
+    grep -Eq '^[[:space:]]*server=[[:space:]]*[^/[:space:]]' "$file" && return 0
+  done
+
+  return 1
+}
+
 # Check if config file is not a directory
 if [ -d "$conf" ]; then
   echo "The bind $conf maps to a file that does not exist!"
@@ -29,21 +40,23 @@ if [ ! -f "$conf" ]; then
   rm -f "$conf"
   cp "$template"  "$conf"
 
-  [ -n "${DNS1:-}" ] && echo "server=$DNS1" >> "$conf"
-  [ -n "${DNS2:-}" ] && echo "server=$DNS2" >> "$conf"
-  [ -n "${DNS3:-}" ] && echo "server=$DNS3" >> "$conf"
-  [ -n "${DNS4:-}" ] && echo "server=$DNS4" >> "$conf"
+  if ! has_global_server; then
+    [ -n "${DNS1:-}" ] && echo "server=$DNS1" >> "$conf"
+    [ -n "${DNS2:-}" ] && echo "server=$DNS2" >> "$conf"
+    [ -n "${DNS3:-}" ] && echo "server=$DNS3" >> "$conf"
+    [ -n "${DNS4:-}" ] && echo "server=$DNS4" >> "$conf"
+  fi
   
   if [ -n "${CACHE_SIZE:-}" ]; then
-    sed -i -e "s/^cache-size=.*/cache-size=$CACHE_SIZE/g" "$conf"
+    echo "cache-size=$CACHE_SIZE" >> "$conf"
   fi
 
   if enabled "${DOMAIN_NEEDED:-}"; then
-    sed -i -e "s/^#domain-needed/domain-needed/g" "$conf"
+    echo "domain-needed" >> "$conf"
   fi
 
   if enabled "${LOG_QUERIES:-}"; then
-    sed -i -e "s/^#log-queries/log-queries/g" "$conf"
+    echo "log-queries" >> "$conf"
   fi
 
 fi

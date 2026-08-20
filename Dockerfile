@@ -16,14 +16,14 @@ RUN <<EOF
   mkdir -p /etc/default/
   printf 'ENABLED=1\nIGNORE_RESOLVCONF=yes\n' > /etc/default/dnsmasq
 
-  # Remove default dnsmasq config
-  rm -f /etc/dnsmasq.conf
+  # Configure default dnsmasq template
+  mv /etc/dnsmasq.conf /etc/dnsmasq.default
+  printf '\nuser=dnsmasq\ngroup=dnsmasq\ninterface=*\n' >> /etc/dnsmasq.default
 
   rm -rf /tmp/* /var/cache/apk/*
 EOF
 
 COPY --chmod=755 entrypoint.sh /usr/bin/dnsmasq.sh
-COPY --chmod=664 dnsmasq.conf /etc/dnsmasq.default
 
 ENV DNS1="1.0.0.1"
 ENV DNS2="1.1.1.1"
