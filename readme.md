@@ -50,8 +50,7 @@ docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -
 
 ## Configuration ⚙️
 
-You can set the `DNS1` till `DNS4` environment variables to configure the upstream DNS
-servers.
+You can configure up to four upstream DNS servers using the `DNS1` through `DNS4` environment variables.
 
 For example, you can set them to the public [Cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) servers like this:
 
@@ -77,15 +76,17 @@ volumes:
 
 ## FAQ 💬
 
-  * ### How to setup the DNS server?
+  * ### How to set up the DNS server?
 
-  By default, dnsmasq acts as a forwarding DNS server. Queries that cannot be answered locally are forwarded to the upstream DNS servers configured with `DNS1` till `DNS4`:
+  By default, dnsmasq acts as a forwarding DNS server. Queries that cannot be answered locally are forwarded to the upstream DNS servers configured with `DNS1` through `DNS4`:
 
   ```yaml
   environment:
     DNS1: "1.0.0.1"
     DNS2: "1.1.1.1"
   ```
+
+  Dnsmasq is a forwarding resolver, so it relies on these upstream servers rather than performing full recursive resolution itself.
 
   Clients can then use the IP address of the host running this container as their DNS server.
 
@@ -101,8 +102,8 @@ volumes:
   You can also provide local DNS records through `/etc/dnsmasq.d/`. For example, create `./dnsmasq.d/local.conf` with:
 
   ```ini
-  address=/server.home/192.168.1.10
-  address=/printer.home/192.168.1.20
+  address=/server.lan/192.168.1.10
+  address=/printer.lan/192.168.1.20
   ```
 
   and mount the directory into the container:
@@ -112,11 +113,11 @@ volumes:
     - ./dnsmasq.d/:/etc/dnsmasq.d/
   ```
 
-  These names are answered locally, while all other queries continue to be forwarded to the configured upstream DNS servers.
+  Queries for these names are answered locally, while all other queries continue to be forwarded to the configured upstream DNS servers.
 
-  * ### How do `DNS1` till `DNS4` interact with custom configuration?
+  * ### How do `DNS1` through `DNS4` interact with custom configuration?
 
-  `DNS1` till `DNS4` configure the default upstream DNS servers when the image uses its generated configuration.
+  `DNS1` through `DNS4` configure the default upstream DNS servers when the image uses its generated configuration.
 
   If you provide your own `/etc/dnsmasq.conf`, these environment variables are ignored:
 
@@ -136,14 +137,14 @@ volumes:
   Domain-specific servers do not replace the default upstreams. For example:
 
   ```ini
-  server=/example.local/192.168.1.1
+  server=/corp.example/192.168.1.1
   ```
 
-  only changes resolution for `example.local`.
+  only changes resolution for `corp.example`.
 
-  * ### How to setup the DHCP server?
+  * ### How to set up the DHCP server?
 
-  To use dnsmasq as a DHCP server, the container will need additional network capabilities added to your compose file:
+  To use dnsmasq as a DHCP server, the container requires additional network capabilities:
 
   ```yaml
   cap_add:
