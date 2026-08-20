@@ -48,4 +48,4 @@ if [ ! -f "$conf" ]; then
 
 fi
 
-exec dnsmasq "--conf-file=$conf" --no-daemon --no-resolv
+exec dnsmasq "--conf-file=$conf" --keep-in-foreground --log-facility=- --no-resolv
