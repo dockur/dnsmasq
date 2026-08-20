@@ -50,7 +50,7 @@ docker run -it --rm --name dnsmasq -p 53:53/udp -p 53:53/tcp -e "DNS1=1.0.0.1" -
 
 ## Configuration ⚙️
 
-You can set the `DNS1` and `DNS2` environment variables to configure the upstream DNS
+You can set the `DNS1` till `DNS4` environment variables to configure the upstream DNS
 servers.
 
 For example, you can set them to the public [Cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) servers like this:
@@ -77,9 +77,73 @@ volumes:
 
 ## FAQ 💬
 
+  * ### How to setup the DNS server?
+
+  By default, dnsmasq acts as a forwarding DNS server. Queries that cannot be answered locally are forwarded to the upstream DNS servers configured with `DNS1` till `DNS4`:
+
+  ```yaml
+  environment:
+    DNS1: "1.0.0.1"
+    DNS2: "1.1.1.1"
+  ```
+
+  Clients can then use the IP address of the host running this container as their DNS server.
+
+  Dnsmasq also caches DNS responses, so repeated queries can be answered locally without contacting the upstream resolver again.
+
+  The cache size can be adjusted with the `CACHE_SIZE` environment variable:
+
+  ```yaml
+  environment:
+    CACHE_SIZE: "1000"
+  ```
+
+  You can also provide local DNS records through `/etc/dnsmasq.d/`. For example, create `./dnsmasq.d/local.conf` with:
+
+  ```ini
+  address=/server.home/192.168.1.10
+  address=/printer.home/192.168.1.20
+  ```
+
+  and mount the directory into the container:
+
+  ```yaml
+  volumes:
+    - ./dnsmasq.d/:/etc/dnsmasq.d/
+  ```
+
+  These names are answered locally, while all other queries continue to be forwarded to the configured upstream DNS servers.
+
+  * ### How do `DNS1` till `DNS4` interact with custom configuration?
+
+  `DNS1` till `DNS4` configure the default upstream DNS servers when the image uses its generated configuration.
+
+  If you provide your own `/etc/dnsmasq.conf`, these environment variables are ignored:
+
+  ```yaml
+  volumes:
+    - ./dnsmasq.conf:/etc/dnsmasq.conf
+  ```
+
+  If you extend the default configuration through `/etc/dnsmasq.d/` and define your own global upstream server:
+
+  ```ini
+  server=192.168.1.1
+  ```
+
+  the default upstream servers are not added.
+
+  Domain-specific servers do not replace the default upstreams. For example:
+
+  ```ini
+  server=/example.local/192.168.1.1
+  ```
+
+  only changes resolution for `example.local`.
+
   * ### How to setup the DHCP server?
 
-  To use dnsmasq as a DHCP server, the container needs additional network capabilities:
+  To use dnsmasq as a DHCP server, the container will need additional network capabilities added to your compose file:
 
   ```yaml
   cap_add:
@@ -106,6 +170,8 @@ volumes:
       restart: always
   ```
 
+  Alternatively, you can use a network driver such as `macvlan` or `ipvlan` when the container should have its own address on the local network.
+
   DHCP is enabled by adding a `dhcp-range` to the dnsmasq configuration. For example, create `./dnsmasq.d/dhcp.conf` with:
 
   ```ini
@@ -113,53 +179,6 @@ volumes:
   ```
 
   This assigns addresses from `192.168.1.100` through `192.168.1.200` with a lease time of 12 hours.
-
-  You can optionally specify the gateway and DNS server advertised to clients:
-
-  ```ini
-  dhcp-range=192.168.1.100,192.168.1.200,255.255.255.0,12h
-  dhcp-option=option:router,192.168.1.1
-  dhcp-option=option:dns-server,192.168.1.10
-  ```
-
-  Replace `192.168.1.1` with your network gateway and `192.168.1.10` with the address of the host running dnsmasq.
-
-  If dnsmasq is the only DHCP server on the network, you can also enable authoritative mode:
-
-  ```ini
-  dhcp-authoritative
-  ```
-
-  Be careful not to run an additional DHCP server on the same network unless they are deliberately configured to coexist.
-
-  Alternatively, you can use a network driver such as `macvlan` or `ipvlan` when the container should have its own address on the local network.
-
-  * ### How do `DNS1` and `DNS2` interact with custom configuration?
-
-  `DNS1` and `DNS2` configure the default upstream DNS servers when the image uses its generated configuration.
-
-  If you provide your own `/etc/dnsmasq.conf`, these environment variables are ignored:
-
-  ```yaml
-  volumes:
-    - ./dnsmasq.conf:/etc/dnsmasq.conf
-  ```
-
-  If you extend the default configuration through `/etc/dnsmasq.d/` and define your own global upstream server:
-
-  ```ini
-  server=192.168.1.1
-  ```
-
-  the default upstream servers are not added.
-
-  Domain-specific servers do not replace the default upstreams. For example:
-
-  ```ini
-  server=/example.local/192.168.1.1
-  ```
-
-  only changes resolution for `example.local`.
 
   * ### Port 53 is already in use?
 
